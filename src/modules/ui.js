@@ -52,53 +52,53 @@ function updateGridFromAttack(grid, attack) {
   }
 }
 
+const gc = new GameController();
+
 const playerGrid = createGrid(10, "player-grid");
-const opponentGrid = createGrid(10, "opponent-grid");
-const gridContainer = document.querySelector(".grid-container");
+const shipContainer = document.createElement("div");
+let draggedShip = null;
+shipContainer.className = "ship-container horizontal";
+gc.player1.unplacedShips.forEach((ship) => {
+  const shipDiv = document.createElement("div");
+  shipDiv.className = "unplaced-ship";
+  shipDiv.id = ship.type;
+  for (let i = 0; i < ship.length; i++) {
+    const shipCell = document.createElement("div");
+    shipCell.className = "unplaced-ship-cell";
+    shipDiv.appendChild(shipCell);
+  }
+  shipDiv.addEventListener("mousedown", (e) => {
+    if (draggedShip) {
+      return;
+    }
+    draggedShip = e.currentTarget.cloneNode(true);
+    draggedShip.classList.add("clone");
+    e.currentTarget.style.visibility = "hidden";
+    document.documentElement.appendChild(draggedShip);
+  });
+  shipContainer.appendChild(shipDiv);
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (draggedShip) {
+    console.log(draggedShip);
+    draggedShip.style.left = e.clientX + "px";
+    draggedShip.style.top = e.clientY + "px";
+  }
+});
+
+document.addEventListener("mouseup", (e) => {
+  if (draggedShip) {
+    const id = draggedShip.id;
+    document.documentElement.removeChild(draggedShip);
+    draggedShip = null;
+    document.querySelector("#" + id).style.visibility = "visible";
+  }
+});
+
+const gridContainer = document.querySelector(".game-container");
 gridContainer.appendChild(playerGrid);
-// gridContainer.appendChild(opponentGrid);
-
-// const gc = new GameController();
-// gc.player1.rotateShip(Ship.ShipType.BATTLESHIP);
-// gc.player1.rotateShip(Ship.ShipType.DESTROYER);
-// gc.player1.placeShip(Ship.ShipType.BATTLESHIP, 1, 1);
-// placeGridShip(
-//   playerGrid,
-//   gc.player1.gameboard.ships[gc.player1.gameboard.ships.length - 1],
-//   1,
-//   1
-// );
-// gc.player1.placeShip(Ship.ShipType.CARRIER, 4, 5);
-// placeGridShip(
-//   playerGrid,
-//   gc.player1.gameboard.ships[gc.player1.gameboard.ships.length - 1],
-//   4,
-//   5
-// );
-// gc.player1.placeShip(Ship.ShipType.DESTROYER, 5, 8);
-// placeGridShip(
-//   playerGrid,
-//   gc.player1.gameboard.ships[gc.player1.gameboard.ships.length - 1],
-//   5,
-//   8
-// );
-// gc.player1.placeShip(Ship.ShipType.PATROL_BOAT, 9, 7);
-// placeGridShip(
-//   playerGrid,
-//   gc.player1.gameboard.ships[gc.player1.gameboard.ships.length - 1],
-//   9,
-//   7
-// );
-// gc.player1.placeShip(Ship.ShipType.SUBMARINE, 3, 4);
-// placeGridShip(
-//   playerGrid,
-//   gc.player1.gameboard.ships[gc.player1.gameboard.ships.length - 1],
-//   3,
-//   4
-// );
-
-// gc.player2.placeShipsRandom();
-// gc.init();
+gridContainer.appendChild(shipContainer);
 
 // opponentGrid.addEventListener("click", (e) => {
 //   if (!e.target.classList.contains("grid-cell")) {

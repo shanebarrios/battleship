@@ -1,39 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap");
+
+:root {
+  --board-dimension: 10;
+  --cell-width: 50px;
+  --cell-border: 1px solid white;
+  --ship-color: grey;
+  --miss-color: white;
+  --hit-color: red;
+}
+
 html,
 body {
   width: 100%;
   height: 100%;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
+body {
+  background: rgb(7, 3, 75);
+  background: linear-gradient(
+    180deg,
+    rgba(7, 3, 75, 1) 0%,
+    rgba(9, 9, 121, 1) 58%,
+    rgba(5, 42, 185, 1) 100%
+  );
+  font-family: "Black Ops One";
 }
 
-.grid-container {
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  color: white;
+}
+
+.game-container {
   display: flex;
   gap: 50px;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .game-grid {
   display: grid;
-  width: 500px;
-  height: 500px;
-  grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+
+  grid-template: repeat(var(--board-dimension), var(--cell-width)) / repeat(
+      var(--board-dimension),
+      var(--cell-width)
+    );
 }
 
 .grid-cell {
-  border: 1px solid black;
+  border: var(--cell-border);
 }
 
 .hit {
-  background-color: red;
+  background-color: var(--hit-color);
 }
 
 .missed {
-  background-color: gray;
+  background-color: var(--miss-color);
 }
 
 .ship {
-  background-color: blue;
+  background-color: var(--ship-color);
+}
+
+.ship-container {
+  display: flex;
+  gap: 30px;
+  width: calc(var(--cell-width) * var(--board-dimension));
+  height: calc(var(--cell-width) * var(--board-dimension));
+}
+
+.unplaced-ship {
+  display: flex;
+  z-index: 1;
+}
+
+.horizontal {
+  flex-direction: column;
+}
+
+.horizontal .unplaced-ship {
+  flex-direction: row;
+}
+
+.vertical {
+  flex-direction: row;
+}
+
+.vertical .unplaced-ship {
+  flex-direction: column;
+}
+
+.clone {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.unplaced-ship-cell {
+  width: var(--cell-width);
+  height: var(--cell-width);
+  background-color: var(--ship-color);
+  border: var(--cell-border);
 }

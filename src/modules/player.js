@@ -5,11 +5,11 @@ export default class Player {
   constructor() {
     this.gameboard = new Gameboard();
     this.unplacedShips = [
-      new Ship(Ship.ShipType.SUBMARINE),
-      new Ship(Ship.ShipType.BATTLESHIP),
-      new Ship(Ship.ShipType.CARRIER),
-      new Ship(Ship.ShipType.DESTROYER),
-      new Ship(Ship.ShipType.PATROL_BOAT),
+      new Ship("carrier"),
+      new Ship("battleship"),
+      new Ship("destroyer"),
+      new Ship("submarine"),
+      new Ship("patrol_boat"),
     ];
     this.lastAttack = {};
   }
