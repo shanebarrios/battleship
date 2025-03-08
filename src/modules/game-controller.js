@@ -1,12 +1,12 @@
 import Player from "./player.js";
-import { AttackStatus } from "./gameboard.js";
 
 export default class GameController {
-  constructor() {
-    this.player1 = new Player();
-    this.player2 = new Player();
+  constructor(player1Name="PLAYER1", player2Name="COMPUTER") {
+    this.player1 = new Player(player1Name);
+    this.player2 = new Player(player2Name);
     this.started = false;
     this.player1Turn = true;
+    this.victor = null;
   }
   init() {
     if (
@@ -17,28 +17,36 @@ export default class GameController {
     }
     return this.started;
   }
-  playTurn(y, x) {
-    if (!this.started) {
-      return AttackStatus.FAILED_ATTACK;
+  playTurn(receiveMethod) {
+    if (!this.started || this.victor) {
+      return null;
     }
     let res = this.player1Turn
-      ? this.player2.receiveAttack(y, x)
-      : this.player1.receiveAttack(y, x);
+      ? receiveMethod(this.player2)
+      : receiveMethod(this.player1);
     if (res) {
       this.player1Turn = !this.player1Turn;
+      if (res.sank) {
+        this.updateVictor();
+      }
     }
     return res;
   }
+  playManualTurn(y, x) {
+    return this.playTurn((player) => player.receiveAttack(y, x));
+  }
   playRandomTurn() {
-    if (!this.started) {
-      return AttackStatus.FAILED_ATTACK;
+    return this.playTurn((player) => player.receiveAttackRandom());
+  }
+  updateVictor() {
+    if (this.player1.gameboard.allSunk()) {
+      this.victor = this.player2.name;
     }
-    let res = this.player1Turn
-      ? this.player2.receiveAttackRandom()
-      : this.player1.receiveAttackRandom();
-    if (res) {
-      this.player1Turn = !this.isPlayer1Turn;
+    else if (this.player2.gameboard.allSunk()) {
+      this.victor = this.player1.name;
     }
-    return res;
+    else {
+      this.victor = null;
+    }
   }
 }

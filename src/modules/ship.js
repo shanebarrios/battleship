@@ -14,6 +14,8 @@ export default class Ship {
     }
     this.isHorizontal = isHorizontal;
     this.numHits = 0;
+    this.y0 = -1;
+    this.x0 = -1;
     this.sunk = false;
   }
   hit() {

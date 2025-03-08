@@ -4,12 +4,6 @@ export const Cell = Object.freeze({
   EMPTY: -1,
 });
 
-export const AttackStatus = Object.freeze({
-  MISSED_ATTACK: -1,
-  FAILED_ATTACK: 0,
-  HIT_ATTACK: 1,
-});
-
 export default class Gameboard {
   constructor(dimension = 10) {
     this.ships = [];
@@ -55,6 +49,8 @@ export default class Gameboard {
       const [y, x] = Gameboard.ithShipCoords(ship, y0, x0, i);
       this.board[y][x] = id;
     }
+    ship.y0 = y0;
+    ship.x0 = x0;
     this.ships.push(ship);
     return true;
   }
@@ -65,15 +61,16 @@ export default class Gameboard {
       this.board[y][x] === Cell.HIT ||
       this.board[y][x] === Cell.MISSED
     ) {
-      return AttackStatus.FAILED_ATTACK;
+      return null;
     } else if (this.board[y][x] === Cell.EMPTY) {
       this.board[y][x] = Cell.MISSED;
-      return AttackStatus.MISSED_ATTACK;
+      return { attackStatus: "missed", y: y, x: x, sank: null };
     } else {
       const id = this.board[y][x];
       this.ships[id].hit();
       this.board[y][x] = Cell.HIT;
-      return AttackStatus.HIT_ATTACK;
+      const sank = this.ships[id].sunk ? this.ships[id] : null;
+      return { attackStatus: "hit", y: y, x: x, sank: sank };
     }
   }
 
