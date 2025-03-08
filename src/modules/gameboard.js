@@ -9,6 +9,7 @@ export default class Gameboard {
     this.ships = [];
     this.dimension = dimension;
     // no idea why initializing 2d arrays in JS is such a pain
+    // (could also use 1d array but idc)
     this.board = Array.from({ length: dimension }, () =>
       Array.from({ length: dimension }, () => Cell.EMPTY)
     );
